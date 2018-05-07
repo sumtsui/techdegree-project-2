@@ -1,13 +1,15 @@
 const students = students53;
 const studentsPerPage = 10;
-const totalPage = getTotalPage(students);
+const totalPage = getPageTotal(students);
 
 showStudents(students, 1);
 showLinks();
+setActiveLink(1);
 
 document.querySelector('.pagination ul').addEventListener('click', (event) => {
 	let pageNum = event.target.text;
 	showStudents(students, pageNum);
+	setActiveLink(pageNum);
 });
 
 function showStudents(studentList, currentPage) {
@@ -25,12 +27,8 @@ function showLinks() {
 	document.querySelector('.pagination').innerHTML = htmlString;
 }
 
-function getLinkHTML() {
-	
-}
-
 // count from 1
-function getTotalPage(studentList) {
+function getPageTotal(studentList) {
 	var total = Math.floor(studentList.length / 10);
 	return total += (studentList.length % 10) ? 1 : 0;
 }
@@ -55,4 +53,12 @@ function getStudentHTML(studentList) {
 			htmlString += `</div></li>`;
 	}
 	return htmlString;
+}
+
+function setActiveLink(currentPage) {
+	let links = document.querySelectorAll('.pagination a');
+	for (let i = 0; i < links.length; i++) {
+		links[i].className = '';
+	}
+	links[currentPage - 1].className = "active";
 }
