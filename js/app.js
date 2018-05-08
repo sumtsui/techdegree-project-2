@@ -1,4 +1,4 @@
-// globle variable holds the student object array
+// variable holds the student object array
 var students = studentList;
 // the number of students shown per page
 const studentsPerPage = 10;
@@ -6,46 +6,71 @@ const studentsPerPage = 10;
 const totalPage = getPageTotal(students);
 
 // search function HTML elements
-const searchForm = document.createElement('form');
-searchForm.className = 'student-search';
+const searchDiv = document.createElement('div');
+searchDiv.className = 'student-search';
 const searchInput = document.createElement('input');
 searchInput.setAttribute('placeholder', 'Search for students...');
 const searchButton = document.createElement('button');
 searchButton.innerText = 'Search';
-searchButton.type = 'submit';
 
-// prepare the page when being loaded for the first time. 
-showStudents(students, 1);
-showLinks(totalPage);
-setActiveLink(1);
-addSearch();
+// show content and focus the search box when the page is loaded.
+window.addEventListener('load', () => {
+	showContent(students, totalPage, 1);
+	addSearch();
+	searchInput.focus();
+});
 
-// when user clicks one of the pagination links, gets the page number, calls showStudents(), and setActiveLink().
+// when user clicks one of the pagination links, use the page number to call showStudents() and setActiveLink().
 document.querySelector('.pagination ul').addEventListener('click', (event) => {
 	let pageNum = event.target.text;
 	showStudents(students, pageNum);
 	setActiveLink(pageNum);
 });
 
-searchForm.addEventListener('submit', (event) => {
-	event.preventDefault();
+// when user perform a search:
+// if search result contains student object, set globe Students varialbe to the search result.
+// if search result is "full list", set globe Students variable back to the whole list.
+// else, show no match found message. 
+searchButton.addEventListener('click', () => {
 	let searchResult = search(studentList); // always search from the whole list
 	if (Array.isArray(searchResult)) {
 		students = searchResult;
 		let totalPage = getPageTotal(searchResult);
-		showStudents(searchResult, 1);
-		showLinks(totalPage);
-		setActiveLink(1);
+		showContent(students, totalPage, 1);
 	} else if (searchResult === "full list") {
 		students = studentList;
-		showStudents(students, 1);
-		showLinks(totalPage);
-		setActiveLink(1);
+		showContent(students, totalPage, 1);
 	} else {
 		print('.student-list', searchResult);
 		document.querySelector('.pagination ul').style.display = 'none';
 	}
 });
+
+// when user start typing in the search box:
+// call search() to see if there is any match.
+// if yes, show the matches to page. 
+// if user clears the search box, show the whole list of students back to the page.
+searchInput.addEventListener('keyup', () => {
+	let searchResult = search(studentList);
+	if (Array.isArray(searchResult)) {
+		students = searchResult;
+		let totalPage = getPageTotal(searchResult);
+		showContent(students, totalPage, 1);
+	} else if (searchResult === "full list") {
+		students = studentList;
+		showContent(students, totalPage, 1);
+	} else {
+		print('.student-list', searchResult);
+		document.querySelector('.pagination ul').style.display = 'none';
+	}
+});
+
+// takes the Student object array, the Total page number needed, and the Current page number.
+function showContent(students, totalPage, currentPage) {
+	showStudents(students, currentPage);
+	showLinks(totalPage);
+	setActiveLink(currentPage);
+}
 
 // render students to the current page.
 function showStudents(studentList, currentPage) {
@@ -54,13 +79,14 @@ function showStudents(studentList, currentPage) {
 }
 
 // based on the totalPage number, render the pagination links to the page.
+// due to Event Delegation, only li items are dynamically generated. ul is not dynamically generated. 
 function showLinks(totalPage) {
 	let htmlString = '';
 	for (let i = 1; i <= totalPage; i++) {
 		htmlString += '<li>';
 		htmlString += `<a href="#">${i}</a></li>`;
 	}
-	document.querySelector('.pagination ul').style.display = 'block';
+	document.querySelector('.pagination ul').style.display = 'block'; // ul's display was set to 'none' if no student match. since it is not dynamically generated, have to set it to 'block' when add the links to the page. 
 	print('.pagination ul', htmlString);
 }
 
@@ -75,8 +101,7 @@ function getStudentsForPage(currentPage, studentList) {
 
 // based on the length of student object array and students per page, return the total pages needed, starting from 1.
 function getPageTotal(studentList) {
-	var total = Math.floor(studentList.length / studentsPerPage);
-	return total += (studentList.length % studentsPerPage) ? 1 : 0;
+	return (Math.ceil(studentList.length/studentsPerPage));
 }
 
 // convert the given student object array to htmlString.
@@ -103,24 +128,31 @@ function setActiveLink(currentPage) {
 	links[currentPage - 1].className = "active";
 }
 
+// append the search elements to DOM.
 function addSearch() {
-	document.querySelector('.page-header').appendChild(searchForm);
-	searchForm.appendChild(searchInput);
-	searchForm.appendChild(searchButton);
+	document.querySelector('.page-header').appendChild(searchDiv);
+	searchDiv.appendChild(searchInput);
+	searchDiv.appendChild(searchButton);
 }
 
+// handle the search logic:
+// if query is empty string, return "full list".
+// loop through the array and add matched object to new array. 
+// if new array has more than 1 object, return the array.
+// else return no match found message.  
 function search(students) {
 	let result;
 	let query = searchInput.value;
 	let match = [];
-	if (query === "" || query === " ") return result = "full list";
+	if (query === "") return result = "full list";
 	for (var i = 0; i < students.length; i++) {
 		if (students[i].name.toLowerCase().includes(query.toLowerCase())) 
 			match.push(students[i]);
-	} 		
+	}	
 	return result = (match.length < 1) ? '<h2>No student match the search term.</h2>' : match;
 }
 
+// print helper function
 function print(selector, content) {
 	document.querySelector(selector).innerHTML = content;
 }
