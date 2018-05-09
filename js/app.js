@@ -32,30 +32,12 @@ document.querySelector('.pagination ul').addEventListener('click', (event) => {
 
 // when user perform a search:
 searchButton.addEventListener('click', () => {
-	students = search(); 
-	if (Array.isArray(students)) {
-		let totalPage = getPageTotal(students);
-		showStudents(students, 1);
-		showLinks(totalPage);
-		setActiveLink(1);
-	} else {
-		print('.student-list', students);
-		document.querySelector('.pagination ul').style.display = 'none';
-	}
+	search(); 
 });
 
 // when user start typing in the search box:
 searchInput.addEventListener('keyup', () => {
-	students = search(); 
-	if (Array.isArray(students)) {
-		let totalPage = getPageTotal(students);
-		showStudents(students, 1);
-		showLinks(totalPage);
-		setActiveLink(1);
-	} else {
-		print('.student-list', students);
-		document.querySelector('.pagination ul').style.display = 'none';
-	}
+	search(); 
 });
 
 // render students to the current page.
@@ -121,21 +103,31 @@ function addSearch() {
 	searchDiv.appendChild(searchButton);
 }
 
-// handle the search logic:
+// handle search query:
 function search() {
 	let query = searchInput.value;
 	let match = [];
 
-	if (query === "") return studentList;
+	if (query === "") students = studentList;
 
 	for (let i = 0; i < studentList.length; i++) {
 		if (studentList[i].name.toLowerCase().includes(query.toLowerCase())) 
 			match.push(studentList[i]);
 	}	
-	return (match.length < 1) ? '<h2>No student match the search term.</h2>' : match;
+	students = (match.length < 1) ? '<h2>No student match the search term.</h2>' : match;
+
+	if (Array.isArray(students)) {
+		let totalPage = getPageTotal(students);
+		showStudents(students, 1);
+		showLinks(totalPage);
+		setActiveLink(1);
+	} else {
+		print('.student-list', students);
+		document.querySelector('.pagination ul').style.display = 'none';
+	}
 }
 
-// print helper function
+// print helper
 function print(selector, content) {
 	document.querySelector(selector).innerHTML = content;
 }
