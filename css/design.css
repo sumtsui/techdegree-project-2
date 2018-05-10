@@ -9,11 +9,12 @@ body{
   width: 70%;
   background-color: #fff;
   border-radius: 5px;
-  padding: 50px;
+  padding: 40px;
 }
 
 .page-header{
   margin-bottom: 20px;
+  clear: both;
 }
   .page-header h2{
     float: left;
@@ -40,7 +41,7 @@ body{
       padding: 8px 15px;
       font-size: 14px;
       background-color: #4ba6c3;
-      color: #fff
+      color: #fff;
     }
 
 .student-list{}
@@ -118,3 +119,72 @@ body{
       background-color: #4ba6c3;
       color: #fff;
     }
+
+/* toggle button */
+.toggle-menu {
+  font-family: Helvetica, sans-serif;
+  text-transform: uppercase;
+  font-size: 80%;
+  color: #999;
+  display: flex;
+  margin-bottom: 1.6em;
+  align-items: center;
+  justify-content: flex-end;
+}
+.switch {
+  position: relative;
+  display: block;
+  width: 42px;
+  height: 22px;
+  float: right;
+  margin-left: .6em;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #4ba6c3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #4ba6c3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

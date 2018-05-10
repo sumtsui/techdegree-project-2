@@ -1,12 +1,12 @@
 // variable holds the student object array.
 var students = studentList;
-const studentsPerPage = 10;
+const studentsPerPage = 6;
 // the total number of pages needed for pagination.
 const totalPage = getPageTotal(students);
 
 // search function HTML elements
-const searchDiv = document.createElement('div');
-searchDiv.className = 'student-search';
+const searchForm = document.createElement('form');
+searchForm.className = 'student-search';
 const searchInput = document.createElement('input');
 searchInput.setAttribute('placeholder', 'Search for students...');
 const searchButton = document.createElement('button');
@@ -19,6 +19,7 @@ window.addEventListener('load', () => {
 	setActiveLink(1);
 	addSearch();
 	searchInput.focus();
+	addToggle();
 });
 
 // when user clicks one of the pagination links:
@@ -31,12 +32,7 @@ document.querySelector('.pagination ul').addEventListener('click', (event) => {
 });
 
 // when user perform a search:
-searchButton.addEventListener('click', () => {
-	search(); 
-});
-
-// when user start typing in the search box:
-searchInput.addEventListener('keyup', () => {
+searchForm.addEventListener('submit', () => {
 	search(); 
 });
 
@@ -98,9 +94,9 @@ function setActiveLink(page) {
 
 // append the search elements to DOM.
 function addSearch() {
-	document.querySelector('.page-header').appendChild(searchDiv);
-	searchDiv.appendChild(searchInput);
-	searchDiv.appendChild(searchButton);
+	document.querySelector('.page-header').appendChild(searchForm);
+	searchForm.appendChild(searchInput);
+	searchForm.appendChild(searchButton);
 }
 
 // handle search query:
@@ -131,4 +127,40 @@ function search() {
 function print(selector, content) {
 	document.querySelector(selector).innerHTML = content;
 }
+
+// toggle between Instant Search and normal search.
+const toggleLabel = document.createElement('label');
+const toggleInput = document.createElement('input');
+const toggleSpan = document.createElement('span');
+const toggleDiv = document.createElement('div');
+const toggleName = document.createElement('label');
+toggleLabel.className = "switch";
+toggleInput.setAttribute('type', 'checkbox');
+toggleSpan.className = "slider round";
+toggleName.textContent = 'Instant Search';
+toggleDiv.className = 'toggle-menu';
+
+function addToggle() {
+	// document.querySelector('.page').insertBefore(toggleDiv, document.querySelector('.page-header'));
+	document.querySelector('.page-header').insertBefore(toggleDiv, searchForm);
+	toggleDiv.appendChild(toggleName);
+	toggleDiv.appendChild(toggleLabel);
+	toggleLabel.appendChild(toggleInput);
+	toggleLabel.appendChild(toggleSpan);
+}
+
+toggleInput.addEventListener('change', (event) => {
+	if (event.target.checked) {
+		searchButton.style.display = 'none';
+		searchInput.focus();
+		// when user start typing in the search box:
+		searchInput.addEventListener('keyup', () => {
+			search();
+		});
+	} else {
+		searchButton.style.display = 'inline-block';
+		searchInput.focus();
+	}
+});
+
 
