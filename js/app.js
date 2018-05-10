@@ -1,6 +1,6 @@
 // variable holds the student object array.
 var students = studentList;
-const studentsPerPage = 6;
+const studentsPerPage = 10;
 // the total number of pages needed for pagination.
 const totalPage = getPageTotal(students);
 
