@@ -154,12 +154,11 @@ toggleInput.addEventListener('change', (event) => {
 		searchButton.style.display = 'none';
 		searchInput.focus();
 		// when user start typing in the search box:
-		searchInput.addEventListener('keyup', () => {
-			search();
-		});
+		searchInput.addEventListener('keyup', search);
 	} else {
 		searchButton.style.display = 'inline-block';
 		searchInput.focus();
+		searchInput.removeEventListener('keyup', search);
 	}
 });
 
