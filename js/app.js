@@ -32,7 +32,8 @@ document.querySelector('.pagination ul').addEventListener('click', (event) => {
 });
 
 // when user perform a search:
-searchForm.addEventListener('submit', () => {
+searchForm.addEventListener('submit', (event) => {
+	event.preventDefault();
 	search(); 
 });
 
@@ -141,7 +142,6 @@ toggleName.textContent = 'Instant Search';
 toggleDiv.className = 'toggle-menu';
 
 function addToggle() {
-	// document.querySelector('.page').insertBefore(toggleDiv, document.querySelector('.page-header'));
 	document.querySelector('.page-header').insertBefore(toggleDiv, searchForm);
 	toggleDiv.appendChild(toggleName);
 	toggleDiv.appendChild(toggleLabel);
